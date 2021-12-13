@@ -1,0 +1,73 @@
+/*
+                if (histogram[x, 0] < NP) sumR += histogram[x, 0];
+                if (histogram[x, 1] < NP) sumG += histogram[x, 1];
+                if (histogram[x, 2] < NP) sumB += histogram[x, 2];*/
+                /* sumR += histogram[i, 0];
+                sumG += histogram[i, 1];
+                sumB += histogram[i, 2];
+                if (sumR >= NP || sumG >= NP || sumB >= NP) { threshold = i; break; }*/ 
+
+
+
+ public static Bitmap OtsuSelection(Bitmap bitmap)
+        {
+
+            Bitmap newBitmap = new Bitmap(bitmap.Width, bitmap.Height);
+            Color newPixel, pixel;
+
+            int[,] histogramFull = Histogram.GetHistogram(bitmap);
+            int[] histogram = Histogram.GetOneChannel(histogramFull, 3);
+            //Normalize histogram
+            histogram = histogram.Select(x => (x / (bitmap.Width * bitmap.Height))).ToArray();
+
+            double mg = 0;
+            for (int i = 0; i < 255; i++)
+            {
+                mg += i * histogram[i];
+            }
+
+            //Get max between-class variance
+            double bcv = 0;
+            int threshold = 0;
+            for (int i = 0; i < 256; i++)
+            {
+                double P1 = 0;
+                double m = 0;
+                for (int j = 0; j < i; j++)
+                {
+                    P1 += histogram[j];
+                    m += j * histogram[j];
+                }
+
+                if (P1 == 0)
+                {
+                    continue;
+                }
+
+                double old_bcv = bcv;
+                bcv = Math.Max(bcv, Math.Pow(mg * P1 - m, 2) / (P1 * (1 - P1)));
+
+                if (bcv > old_bcv)
+                {
+                    threshold = i;
+                }
+            }
+
+            //threshold = Maximum;
+
+            //warunek progowania 
+            for (int x = 0; x < bitmap.Width; x++)
+            {
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    pixel = bitmap.GetPixel(x, y);
+
+                    if (pixel.R < threshold || pixel.G < threshold || pixel.B < threshold) newPixel = Color.FromArgb(0, 0, 0);
+                    else newPixel = Color.FromArgb(255, 255, 255);
+
+                    newBitmap.SetPixel(x, y, newPixel);
+                }
+            }
+
+            return newBitmap;
+        }

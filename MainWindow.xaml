@@ -1,0 +1,173 @@
+﻿<Window x:Class="PS8.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PPM_" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="Kompresor zdjęć" Height="1000" Width="1400"
+        >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <!--// Auto means size to column content and
+        //* means size proportional to grid
+        starValue  -> It allows you to specify columns and rows in percentages, * is need to use after the value.
+        Auto       ->  The size is determined by the size of the content object.
+        -->
+
+        <WrapPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Grid.Row="4" Grid.Column="2">
+            <StackPanel>
+                <Button Margin="0 10 10 0"  Click="OpenPpmFile">Otwórz plik PPM</Button>
+                <Button Margin="0 10 10 0" Click="OpenJpgFile">Otwórz plik JPG/PNG</Button>
+            </StackPanel>
+            <StackPanel>
+                <Button Margin="0 10 10 0" Click="SaveJpgFile">Zapisz plik jako JPG</Button>
+                <Button Margin="0 10 10 0" Click="SavePngFile">Zapisz plik jako PNG</Button>
+            </StackPanel>
+        </WrapPanel>
+
+        <StackPanel HorizontalAlignment="Center" Grid.Row="3" Grid.RowSpan="3" Grid.Column="2">
+            <Image Height="138px" Margin="0 0 0 20px" Name="HistogramBox" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+            <Button Margin="0 10 10 0" Click="ElementaryOperations">Wykonaj Operacje na pikselach</Button>
+            <WrapPanel>
+            <Label>Red:</Label> <TextBox Text="0" Height="auto" Width="20" Margin="5 0 0 0" PreviewTextInput="PreviewTextInput" Name="RedVal"/>
+            <Label>Green:</Label> <TextBox Text="0"  Height="auto" Width="20" Margin="5 0 0 0" PreviewTextInput="PreviewTextInput" Name="GreenVal"/>
+            <Label>Blue:</Label> <TextBox Text="0" Height="auto" Width="20" Margin="5 0 0 0" PreviewTextInput="PreviewTextInput" Name="BlueVal"/>
+                <StackPanel>
+                    <RadioButton Name="Add" GroupName="ElementarOpertation">Dodawanie</RadioButton>
+                    <RadioButton Name="Sub" GroupName="ElementarOpertation">Odejmowanie</RadioButton>
+                    <RadioButton Name="Mul" GroupName="ElementarOpertation">Mnożenie</RadioButton>
+                    <RadioButton Name="Div" GroupName="ElementarOpertation">Dzielenie</RadioButton>
+                </StackPanel>  
+            </WrapPanel>
+            <WrapPanel HorizontalAlignment="Center">
+                <Button Margin="0 10 10 0" Click="GrayScaleLuminosity">Luminosity Grayscale</Button>
+                <Button Margin="0 10 10 0" Click="GrayScale">Basic Grayscale</Button>
+            </WrapPanel>
+            <WrapPanel HorizontalAlignment="Center">
+                <TextBox Text="0" Height="auto" Width="20" Margin="5 10 0 5" PreviewTextInput="PreviewTextInput" Name="BrightnessVal"/>
+                <Button Margin="5 5 5 0" Click="Brightness">Apply Brightness (%)</Button>
+                <Button Margin="5 5 5 0" Click="ResetPreview">Reset Preview</Button>
+            </WrapPanel>
+      
+            <Label>Filtry</Label>
+            <Button Margin="5 5 5 0" Click="AverageFilter">AverageFilter</Button>
+            <Button Margin="5 5 5 0" Click="MedianFilter">MedianFilter</Button>
+            <WrapPanel HorizontalAlignment="Center">
+            <Button Margin="5 5 5 0" Click="SobelFilter">SobelFilter</Button>
+            <Button Margin="5 5 5 0" Click="SobelFilterX">SobelFilterX</Button>
+            <Button Margin="5 5 5 0" Click="SobelFilterY">SobelFilterY</Button>
+            </WrapPanel>
+            <Button Margin="5 5 5 0" Click="HighPassFilter">HighPassFilter</Button>
+            <Button Margin="5 5 5 0" Click="GaussianFilter">GaussianFilter</Button>
+        <StackPanel  >
+                <Label>Operacje na histogramie</Label>
+                <Button Margin="5 5 5 0" Click="StretchHistogram">StretchHistogram</Button>
+                <Button Margin="5 5 5 0" Click="EqualizationHistogram">EqualizationHistogram</Button>
+                <Label>Binaryzacja</Label>
+                <WrapPanel>
+                    <Button Margin="5 5 5 0" Click="CustomBinarization">CustomBinarization</Button>
+                    <Label>Threshold:</Label>
+                    <TextBox Text="0" Height="auto" Width="20" Margin="5 0 0 0" PreviewTextInput="PreviewTextInput" Name="ThresholdVal"/>
+                    <Button Margin="5 5 5 0" Click="PercentBlackPixels ">PercentBlackPixels</Button>
+                    <Label>%</Label>
+                    <TextBox Text="0" Height="auto" Width="20" Margin="5 0 0 0" PreviewTextInput="PreviewTextInput" Name="ThresholdPercentVal"/>
+                </WrapPanel>
+                <WrapPanel>
+                    <Button Margin="5 5 5 0" Click="MeanIterativeSelection">MeanIterativeSelection</Button>
+                    <Button Margin="5 5 5 0" Click="EntropySelection">EntropySelection</Button>
+                    <Button Margin="5 5 5 0" Click="MinimumError">MinimumError</Button>
+                </WrapPanel>
+            </StackPanel>
+
+            <StackPanel>
+                <Label>Operatory morfologiczne</Label>
+                <WrapPanel HorizontalAlignment="Center">
+                    <Button Margin="5 5 5 0" Click="Dilatation">Dylatacja</Button>
+                    <Button Margin="5 5 5 0" Click="Erosion">Erozja</Button>
+                    <Button Margin="5 5 5 0" Click="Opening">Otwarcie</Button>
+                    <Button Margin="5 5 5 0" Click="Closing">Domknięcie</Button>
+                </WrapPanel>
+                <WrapPanel Margin="0 10px 0 0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Button Width="100px" Height="60" Click="HitOrMiss">Trafił-nie-Trafił</Button>
+                    <StackPanel HorizontalAlignment="Center" Margin="0 0 0 0">
+                        <WrapPanel>
+                            <TextBox Margin="1" Width="20px" Name="MaskVal_0_0"></TextBox>
+                            <TextBox Margin="1" Width="20px" Name="MaskVal_0_1"></TextBox>
+                            <TextBox Margin="1" Width="20px" Name="MaskVal_0_2"></TextBox>
+                        </WrapPanel>
+                        <WrapPanel>
+                            <TextBox Margin="1" Width="20px" Name="MaskVal_1_0"></TextBox>
+                            <TextBox Margin="1" Width="20px" Name="MaskVal_1_1"></TextBox>
+                            <TextBox Margin="1" Width="20px" Name="MaskVal_1_2"></TextBox>
+                        </WrapPanel>
+                        <WrapPanel>
+                            <TextBox Margin="1" Width="20px" Name="MaskVal_2_0"></TextBox>
+                            <TextBox Margin="1" Width="20px" Name="MaskVal_2_1"></TextBox>
+                            <TextBox Margin="1" Width="20px" Name="MaskVal_2_2"></TextBox>
+                        </WrapPanel>
+                    </StackPanel>
+
+                </WrapPanel>
+                <WrapPanel HorizontalAlignment="Center">
+                    <Button Margin="5 5 5 0" Click="Thin">Ścienianie</Button>
+                    <Button Margin="5 5 5 0" Click="Thick">Pogrubienie</Button>
+                </WrapPanel>
+                
+                <WrapPanel HorizontalAlignment="Center">
+                    <Label Name="AmountBox"></Label>
+                    <Button Margin="5 5 5 0" Click="GetGreen">Wybierz zieleń</Button>
+                    <Button Margin="5 5 5 0" Click="GetColor">Wybierz z zakresu</Button>
+                </WrapPanel>
+
+                <StackPanel Margin="0 10px 0 0">
+                <xctk:RangeSlider Name="HueSlider" Panel.ZIndex="1" Minimum="0" Maximum="359"  LowerValue="70" HigherValue="170" >
+                </xctk:RangeSlider>
+                    <Image Name="HueBar" Panel.ZIndex="0" Margin="0 -20px 0 0" Height="20px"  Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+
+                </StackPanel>
+            </StackPanel>
+            
+            
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" Grid.RowSpan="3" Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Image  Name="ImageBox" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+        </ScrollViewer>
+        <ScrollViewer Grid.Row="1" Grid.RowSpan="3" Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Image  Name="ImageBoxEdit" Stretch="None" RenderOptions.BitmapScalingMode="NearestNeighbor" />
+        </ScrollViewer>
+
+        <StackPanel Margin="10" Orientation="Vertical" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+            <TextBlock Text="Skala podglądu" />
+            <Slider  Maximum="50" Minimum="0.01"  Value="1" TickPlacement="None" 
+                     TickFrequency="0.01" Padding="5"  Name="ImageScale"
+                IsSnapToTickEnabled="True" ValueChanged="Slider_ScaleImage" Margin="0,0,0,10"/>
+            <!--<Slider  Maximum="50" Minimum="0.01"  Value="1" TickPlacement="None" 
+                     TickFrequency="0.01" Padding="5"  Name="ImageScaleEdit"
+                IsSnapToTickEnabled="True" ValueChanged="Slider_ScaleImageEdit" Margin="0,0,0,10"/>-->
+            <TextBlock Text="Poziom kompresji JPG" />
+            <TextBlock Name="inputVal" Text="0" />
+            <Slider  Maximum="100" Minimum="1"  Value="100" TickPlacement="None" 
+                     TickFrequency="1" Padding="5"  Name="valueSliderJPG"
+                IsSnapToTickEnabled="True" ValueChanged="Slider_Conversion" />
+            
+        </StackPanel>
+        <Label Grid.Row="5" Foreground="#ddd">
+            Stworzył: Michał Mlenko
+        </Label>
+
+    </Grid>
+</Window>
